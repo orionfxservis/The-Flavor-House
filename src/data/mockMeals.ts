@@ -1,17 +1,28 @@
 import { MealItem, SubscriptionPlan, UserSubscription, DeliveryTracking, AppNotification, BlogPost } from '../types/meal';
 
-export const HERO_IMAGE = '/src/assets/images/hero_gourmet_dish_1794484423640.jpg';
-export const CHEF_KITCHEN_IMAGE = '/src/assets/images/chef_prep_kitchen_1794484426322.jpg';
-export const STEAK_MEAL_IMAGE = '/src/assets/images/meal_steak_chimichurri_1794484424559.jpg';
-export const CHICKEN_MEAL_IMAGE = '/src/assets/images/meal_herb_chicken_1794484425605.jpg';
-export const SALMON_BOWL_IMAGE = '/src/assets/images/meal_salmon_bowl_1794484426040.jpg';
+import heroGourmetDish from '../assets/images/hero_gourmet_dish_1794484423640.jpg';
+import chefPrepKitchen from '../assets/images/chef_prep_kitchen_1794484426322.jpg';
+import mealSteakChimichurri from '../assets/images/meal_steak_chimichurri_1794484424559.jpg';
+import mealHerbChicken from '../assets/images/meal_herb_chicken_1794484425605.jpg';
+import mealSalmonBowl from '../assets/images/meal_salmon_bowl_1794484426040.jpg';
+import breakfastAvocadoToast from '../assets/images/breakfast_avocado_toast_1794486517872.jpg';
+import breakfastShakshuka from '../assets/images/breakfast_shakshuka_1794486518901.jpg';
+import breakfastPancakes from '../assets/images/breakfast_pancakes_1794486518986.jpg';
+import lunchWagyuBurger from '../assets/images/lunch_wagyu_burger_1794486520136.jpg';
+import dinnerBraisedShortrib from '../assets/images/dinner_braised_shortrib_1794486521238.jpg';
 
-// New specialized section images
-export const BREAKFAST_AVOCADO_TOAST = '/src/assets/images/breakfast_avocado_toast_1794486517872.jpg';
-export const BREAKFAST_SHAKSHUKA = '/src/assets/images/breakfast_shakshuka_1794486518901.jpg';
-export const BREAKFAST_PANCAKES = '/src/assets/images/breakfast_pancakes_1794486518986.jpg';
-export const LUNCH_WAGYU_BURGER = '/src/assets/images/lunch_wagyu_burger_1794486520136.jpg';
-export const DINNER_SHORT_RIB = '/src/assets/images/dinner_braised_shortrib_1794486521238.jpg';
+export const HERO_IMAGE = heroGourmetDish;
+export const CHEF_KITCHEN_IMAGE = chefPrepKitchen;
+export const STEAK_MEAL_IMAGE = mealSteakChimichurri;
+export const CHICKEN_MEAL_IMAGE = mealHerbChicken;
+export const SALMON_BOWL_IMAGE = mealSalmonBowl;
+
+// Specialized section images
+export const BREAKFAST_AVOCADO_TOAST = breakfastAvocadoToast;
+export const BREAKFAST_SHAKSHUKA = breakfastShakshuka;
+export const BREAKFAST_PANCAKES = breakfastPancakes;
+export const LUNCH_WAGYU_BURGER = lunchWagyuBurger;
+export const DINNER_SHORT_RIB = dinnerBraisedShortrib;
 
 export const MEALS_CATALOG: MealItem[] = [
   // ================= MORNING BREAKFAST SECTION =================
