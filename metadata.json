@@ -1,0 +1,6 @@
+{
+  "name": "Clean Creations | Gourmet Meal Delivery & Subscription",
+  "description": "High-end chef-prepared meal delivery across the USA with weekly subscriptions, custom macro meals, Stripe recurring billing, and real-time delivery tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

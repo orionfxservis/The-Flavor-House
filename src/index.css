@@ -1,0 +1,75 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+  scroll-behavior: smooth;
+}
+
+@keyframes smoothFloatVertical {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-scroll-food-y {
+  animation: smoothFloatVertical 70s linear infinite;
+}
+
+@keyframes scrollBlogsRtl {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50% - 12px));
+  }
+}
+
+.animate-scroll-blogs-rtl {
+  animation: scrollBlogsRtl 42s linear infinite;
+}
+
+/* Glass effect utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.dark .glass-panel {
+  background: rgba(24, 24, 27, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(229, 231, 235, 0.6);
+}
+
+.dark .glass-pill {
+  background: rgba(39, 39, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Tabular numbers for all macros and financial prices */
+.tabular-numbers {
+  font-variant-numeric: tabular-nums;
+}
