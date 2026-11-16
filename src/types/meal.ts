@@ -1,4 +1,6 @@
 export type DietaryFlag =
+  | 'vegan'
+  | 'vegetarian'
   | 'gluten-free'
   | 'dairy-free'
   | 'keto'
@@ -11,7 +13,15 @@ export type DietaryFlag =
 export type MealCategory =
   | 'breakfast'
   | 'lunch'
-  | 'dinner';
+  | 'dinner'
+  | 'snacks';
+
+export interface MealAddon {
+  id: string;
+  name: string;
+  price: number;
+  calories?: number;
+}
 
 export interface NutritionalMacros {
   calories: number;
@@ -28,12 +38,15 @@ export interface MealItem {
   subtitle: string;
   description: string;
   category: MealCategory;
+  subcategory?: string;
   price: number;
   image: string;
   macros: NutritionalMacros;
+  nutritionVerified?: boolean;
   tags: DietaryFlag[];
   ingredients: string[];
   allergens: string[];
+  addons?: MealAddon[];
   chefNote?: string;
   heatingInstructions?: string;
   badge?: string;
@@ -41,10 +54,11 @@ export interface MealItem {
 }
 
 export interface CustomizationOption {
-  portion: 'standard' | 'athlete'; // Athlete adds +40% protein, +$3.50
+  portion: 'standard' | 'athlete' | 'regular' | 'large' | 'extra';
   carbSwap: 'original' | 'cauliflower-rice' | 'sweet-potato' | 'jasmine-rice' | 'extra-greens';
   sauceOption: 'standard' | 'extra' | 'on-the-side' | 'light';
   dietaryExclusions: string[];
+  addons?: { id: string; name: string; price: number }[];
   specialInstructions?: string;
 }
 

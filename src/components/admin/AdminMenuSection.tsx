@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Pencil, Trash2, Search, X, Check, AlertCircle } from 'lucide-react';
-import { MealItem, MealCategory } from '../../types/meal';
+import { MealItem, MealCategory, DietaryFlag } from '../../types/meal';
 import { AdminRole } from '../../types/admin';
 import {
   HERO_IMAGE,
@@ -10,20 +10,37 @@ import {
   BREAKFAST_AVOCADO_TOAST,
   BREAKFAST_SHAKSHUKA,
   BREAKFAST_PANCAKES,
+  BREAKFAST_OMELET,
   LUNCH_WAGYU_BURGER,
-  DINNER_SHORT_RIB
+  LUNCH_HARVEST_SALAD,
+  DINNER_SHORT_RIB,
+  SNACK_GREEN_SMOOTHIE,
+  SNACK_CHOCOLATE_TART
 } from '../../data/mockMeals';
 
 const PHOTO_PRESETS = [
+  { label: 'Herb Egg White Omelet (Breakfast)', url: BREAKFAST_OMELET },
   { label: 'Avocado Tartine (Breakfast)', url: BREAKFAST_AVOCADO_TOAST },
   { label: 'Cast-Iron Shakshuka (Breakfast)', url: BREAKFAST_SHAKSHUKA },
   { label: 'Ricotta Pancakes (Breakfast)', url: BREAKFAST_PANCAKES },
-  { label: 'Wagyu Truffle Burger (Lunch)', url: LUNCH_WAGYU_BURGER },
   { label: 'Salmon Wellness Bowl (Lunch)', url: SALMON_BOWL_IMAGE },
+  { label: 'Warm Harvest Salad (Lunch)', url: LUNCH_HARVEST_SALAD },
+  { label: 'Wagyu Truffle Burger (Lunch)', url: LUNCH_WAGYU_BURGER },
   { label: 'Herb Chicken Plate (Lunch)', url: CHICKEN_MEAL_IMAGE },
-  { label: '12-Hour Braised Short Rib (Dinner)', url: DINNER_SHORT_RIB },
+  { label: 'Pan-Seared King Salmon (Dinner)', url: HERO_IMAGE },
   { label: 'Chimichurri Filet Mignon (Dinner)', url: STEAK_MEAL_IMAGE },
-  { label: 'Pan-Seared King Salmon (Dinner)', url: HERO_IMAGE }
+  { label: '12-Hour Braised Short Rib (Dinner)', url: DINNER_SHORT_RIB },
+  { label: 'Matcha Green Smoothie (Snacks & Drinks)', url: SNACK_GREEN_SMOOTHIE },
+  { label: 'Dark Chocolate Tart (Snacks & Drinks)', url: SNACK_CHOCOLATE_TART }
+];
+
+const DIETARY_OPTIONS: { id: DietaryFlag; label: string }[] = [
+  { id: 'vegan', label: 'Vegan' },
+  { id: 'vegetarian', label: 'Vegetarian' },
+  { id: 'gluten-free', label: 'Gluten-Free' },
+  { id: 'dairy-free', label: 'Dairy-Free' },
+  { id: 'high-protein', label: 'High-Protein' },
+  { id: 'keto', label: 'Keto' }
 ];
 
 interface AdminMenuSectionProps {
@@ -51,10 +68,13 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
   const [subtitle, setSubtitle] = useState('');
   const [price, setPrice] = useState('18.50');
   const [category, setCategory] = useState<MealCategory>('lunch');
+  const [subcategory, setSubcategory] = useState('Grain Bowls');
   const [image, setImage] = useState(HERO_IMAGE);
   const [calories, setCalories] = useState('480');
   const [protein, setProtein] = useState('38');
   const [ingredientsText, setIngredientsText] = useState('Organic Produce, Pasture-Raised Protein, Extra Virgin Olive Oil');
+  const [allergensText, setAllergensText] = useState('');
+  const [selectedTags, setSelectedTags] = useState<DietaryFlag[]>(['gluten-free', 'high-protein']);
   const [available, setAvailable] = useState(true);
 
   const canModifyMenu = userRole === 'owner' || userRole === 'manager';
@@ -65,10 +85,13 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
     setSubtitle('');
     setPrice('18.50');
     setCategory('lunch');
+    setSubcategory('Grain Bowls');
     setImage(HERO_IMAGE);
     setCalories('480');
     setProtein('38');
     setIngredientsText('Organic Produce, Pasture-Raised Protein, Extra Virgin Olive Oil');
+    setAllergensText('');
+    setSelectedTags(['gluten-free', 'high-protein']);
     setAvailable(true);
     setIsModalOpen(true);
   };
@@ -79,12 +102,21 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
     setSubtitle(meal.subtitle);
     setPrice(meal.price.toFixed(2));
     setCategory(meal.category);
+    setSubcategory(meal.subcategory || '');
     setImage(meal.image);
     setCalories(String(meal.macros.calories));
     setProtein(String(meal.macros.protein));
     setIngredientsText(meal.ingredients.join(', '));
+    setAllergensText(meal.allergens.join(', '));
+    setSelectedTags(meal.tags || []);
     setAvailable(meal.available !== false);
     setIsModalOpen(true);
+  };
+
+  const toggleDietaryTag = (tag: DietaryFlag) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
   };
 
   const handleSave = (e: React.FormEvent) => {
@@ -96,6 +128,10 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
       .split(',')
       .map((s) => s.trim())
       .filter(Boolean);
+    const parsedAllergens = allergensText
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
 
     if (editingMeal) {
       onUpdateMeal({
@@ -104,8 +140,12 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
         subtitle: subtitle.trim() || editingMeal.subtitle,
         price: parsedPrice,
         category,
+        subcategory: subcategory.trim() || undefined,
         image: image.trim() || HERO_IMAGE,
         available,
+        tags: selectedTags,
+        allergens: parsedAllergens,
+        nutritionVerified: true,
         ingredients: parsedIngredients.length > 0 ? parsedIngredients : editingMeal.ingredients,
         macros: {
           ...editingMeal.macros,
@@ -120,18 +160,20 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
         subtitle: subtitle.trim() || 'Chef-crafted seasonal entrée with organic ingredients',
         description: subtitle.trim() || 'Prepared fresh in small culinary batches.',
         category,
+        subcategory: subcategory.trim() || undefined,
         price: parsedPrice,
         image: image.trim() || HERO_IMAGE,
         available,
+        nutritionVerified: true,
         macros: {
           calories: parseInt(calories, 10) || 480,
           protein: parseInt(protein, 10) || 36,
           carbs: 32,
           fat: 18
         },
-        tags: ['gluten-free', 'high-protein'],
+        tags: selectedTags,
         ingredients: parsedIngredients.length > 0 ? parsedIngredients : ['Organic Produce', 'Extra Virgin Olive Oil'],
-        allergens: [],
+        allergens: parsedAllergens,
         badge: 'Chef Addition'
       };
       onAddMeal(newMeal);
@@ -184,7 +226,7 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
       {/* Filter & Search Bar */}
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-1 p-1 bg-stone-200/70 dark:bg-stone-800/80 rounded-xl">
-          {(['all', 'breakfast', 'lunch', 'dinner'] as const).map((cat) => (
+          {(['all', 'breakfast', 'lunch', 'dinner', 'snacks'] as const).map((cat) => (
             <button
               key={cat}
               type="button"
@@ -195,7 +237,7 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
               }`}
             >
-              {cat === 'all' ? `All (${meals.length})` : cat}
+              {cat === 'all' ? `All (${meals.length})` : cat === 'snacks' ? 'Snacks & Beverages' : cat}
             </button>
           ))}
         </div>
@@ -249,8 +291,15 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
                         </div>
                       </div>
                     </td>
-                    <td className="py-3 px-4 capitalize text-stone-700 dark:text-stone-300 font-medium">
-                      {meal.category}
+                    <td className="py-3 px-4 text-stone-700 dark:text-stone-300 font-medium">
+                      <span className="capitalize">
+                        {meal.category === 'snacks' ? 'Snacks & Drinks' : meal.category}
+                      </span>
+                      {meal.subcategory && (
+                        <span className="block text-[11px] text-stone-400 font-normal">
+                          {meal.subcategory}
+                        </span>
+                      )}
                     </td>
                     <td className="py-3 px-4 font-mono text-xs text-stone-500 dark:text-stone-400 tabular-nums whitespace-nowrap">
                       {meal.macros.calories} kcal · {meal.macros.protein}g P
@@ -347,8 +396,8 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
                 />
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="col-span-2 sm:col-span-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
                   <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
                     Section Category
                   </label>
@@ -357,15 +406,31 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
                     onChange={(e) => setCategory(e.target.value as MealCategory)}
                     className="w-full px-3 py-2 text-sm bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100"
                   >
-                    <option value="breakfast">Morning Breakfast</option>
-                    <option value="lunch">Lunch Service</option>
-                    <option value="dinner">Dinner Dining</option>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                    <option value="snacks">Snacks &amp; Beverages</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                    Price ($)
+                    Subcategory
+                  </label>
+                  <input
+                    type="text"
+                    value={subcategory}
+                    onChange={(e) => setSubcategory(e.target.value)}
+                    placeholder="e.g. Omelets, Grain Bowls, Steaks, Smoothies"
+                    className="w-full px-3 py-2 text-sm bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                    Price (USD $)
                   </label>
                   <input
                     type="number"
@@ -380,13 +445,26 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
 
                 <div>
                   <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                    Calories
+                    Calories (kcal)
                   </label>
                   <input
                     type="number"
-                    min="50"
+                    min="30"
                     value={calories}
                     onChange={(e) => setCalories(e.target.value)}
+                    className="w-full px-3 py-2 text-sm font-mono bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                    Protein (g)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={protein}
+                    onChange={(e) => setProtein(e.target.value)}
                     className="w-full px-3 py-2 text-sm font-mono bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100"
                   />
                 </div>
@@ -424,6 +502,44 @@ export const AdminMenuSection: React.FC<AdminMenuSectionProps> = ({
                     className="w-full px-3 py-2 text-sm bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1.5">
+                  Dietary Labels
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {DIETARY_OPTIONS.map((opt) => {
+                    const active = selectedTags.includes(opt.id);
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => toggleDietaryTag(opt.id)}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
+                          active
+                            ? 'bg-emerald-600 text-white border-emerald-600'
+                            : 'bg-stone-50 dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-700'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  Allergens (comma separated, leave blank if allergen-free)
+                </label>
+                <input
+                  type="text"
+                  value={allergensText}
+                  onChange={(e) => setAllergensText(e.target.value)}
+                  placeholder="e.g. Eggs, Dairy, Tree Nuts (Almonds)"
+                  className="w-full px-3.5 py-2 text-sm bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100"
+                />
               </div>
 
               <div>

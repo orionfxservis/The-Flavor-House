@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, ShieldCheck, LayoutDashboard } from 'lucide-react';
+import { ArrowRight, LayoutDashboard } from 'lucide-react';
 import { HERO_IMAGE } from '../data/mockMeals';
 import { AdminUser } from '../types/admin';
 
@@ -38,28 +38,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </p>
 
             {/* Direct Primary Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 pt-2">
               <button
                 onClick={onExploreMenu}
-                className="flex items-center gap-2.5 px-6 py-3.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl shadow-md transition-all hover:translate-y-[-1px] text-sm sm:text-base cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl shadow-md transition-all hover:translate-y-[-1px] text-xs sm:text-[13px] whitespace-nowrap cursor-pointer"
               >
                 <span>Explore Dining Menus</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </button>
 
               <button
                 onClick={onChoosePlan}
-                className="px-6 py-3.5 glass-panel text-stone-900 dark:text-stone-100 font-semibold rounded-xl hover:bg-white dark:hover:bg-stone-800 transition-colors text-sm sm:text-base cursor-pointer"
+                className="px-3.5 py-2.5 glass-panel text-stone-900 dark:text-stone-100 font-semibold rounded-xl hover:bg-white dark:hover:bg-stone-800 transition-colors text-xs sm:text-[13px] whitespace-nowrap cursor-pointer"
               >
-                Subscription Plans & Pricing
+                Subscription Plans &amp; Pricing
               </button>
 
               {onOpenAdminDashboard && (
                 <button
                   onClick={onOpenAdminDashboard}
-                  className="flex items-center gap-2 px-5 py-3.5 bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:hover:bg-white text-white dark:text-stone-900 font-semibold rounded-xl shadow-xs transition-colors text-sm sm:text-base cursor-pointer whitespace-nowrap"
+                  className="flex items-center gap-1.5 px-3.5 py-2.5 bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:hover:bg-white text-white dark:text-stone-900 font-semibold rounded-xl shadow-xs transition-colors text-xs sm:text-[13px] cursor-pointer whitespace-nowrap"
                 >
-                  <LayoutDashboard className="w-4 h-4 text-amber-500 dark:text-amber-600" />
+                  <LayoutDashboard className="w-3.5 h-3.5 text-amber-500 dark:text-amber-600 shrink-0" />
                   <span>{adminUser ? `Dashboard (${adminUser.role})` : 'Login to Dashboard'}</span>
                 </button>
               )}
@@ -95,65 +95,53 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           </div>
 
-          {/* Right Column: High-Fidelity Hero Culinary Card with Glass Overlays */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-stone-200/50 dark:border-stone-800/80 aspect-4/3 lg:aspect-square group">
-              <img
-                src={HERO_IMAGE}
-                alt="Pan-seared wild salmon with roasted asparagus and tricolor quinoa"
-                className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
-                referrerPolicy="no-referrer"
-              />
-              
-              {/* Subtle gradient scrim */}
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-stone-950/20" />
-
-              {/* Floating Top Glass Tag */}
-              <div className="absolute top-4 left-4 glass-panel px-3.5 py-1.5 rounded-full text-xs font-semibold text-stone-900 dark:text-stone-100 shadow-lg">
-                Fresh Catch · Wild Alaskan King Salmon
+          {/* Right Column: Clean Culinary Hero Card matching editorial layout */}
+          <div className="lg:col-span-5">
+            <div className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-stone-200/60 dark:border-stone-800/80 bg-[#163029] group">
+              <div className="aspect-4/3 w-full overflow-hidden bg-stone-900">
+                <img
+                  src={HERO_IMAGE}
+                  alt="Pan-seared wild salmon with quinoa and roasted seasonal vegetables"
+                  className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                  referrerPolicy="no-referrer"
+                />
               </div>
 
-              {/* Floating Bottom Glass Nutrition Spec */}
-              <div className="absolute bottom-4 inset-x-4 glass-panel p-4 rounded-2xl shadow-xl">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-serif font-bold text-stone-900 dark:text-stone-50 text-base">
-                      Pan-Seared King Salmon
-                    </h3>
-                    <p className="text-xs text-stone-600 dark:text-stone-300">
-                      Lemon dill reduction & tricolor Andean quinoa
-                    </p>
-                  </div>
-                  <span className="text-sm font-bold text-amber-700 dark:text-amber-400 tabular-numbers">
-                    $17.95
-                  </span>
-                </div>
+              <div className="bg-[#163029] px-5 py-5 sm:px-6 sm:py-5">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-[#d8b467]">
+                  WELCOME TO THE FLAVOR HOUSE
+                </p>
+                <h2 className="text-lg sm:text-xl font-bold text-white leading-snug mt-1">
+                  Fresh Flavors. Expertly Crafted. Delivered to You.
+                </h2>
+                <p className="text-xs sm:text-[13px] text-stone-200/90 mt-1.5 leading-relaxed">
+                  Discover chef-prepared breakfast, lunch and dinner with fresh ingredients, customizable meals and convenient delivery.
+                </p>
 
-                <div className="mt-3 pt-3 border-t border-stone-200/40 dark:border-stone-700/50 grid grid-cols-4 gap-2 text-center text-xs">
-                  <div>
-                    <span className="block text-[11px] text-stone-500 dark:text-stone-400">Calories</span>
-                    <span className="font-semibold text-stone-900 dark:text-stone-100 tabular-numbers">490</span>
-                  </div>
-                  <div>
-                    <span className="block text-[11px] text-stone-500 dark:text-stone-400">Protein</span>
-                    <span className="font-semibold text-stone-900 dark:text-stone-100 tabular-numbers">44g</span>
-                  </div>
-                  <div>
-                    <span className="block text-[11px] text-stone-500 dark:text-stone-400">Carbs</span>
-                    <span className="font-semibold text-stone-900 dark:text-stone-100 tabular-numbers">26g</span>
-                  </div>
-                  <div>
-                    <span className="block text-[11px] text-stone-500 dark:text-stone-400">Fats</span>
-                    <span className="font-semibold text-stone-900 dark:text-stone-100 tabular-numbers">22g</span>
-                  </div>
+                <div className="flex flex-wrap items-center gap-2.5 mt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const menuEl = document.getElementById('menu-section');
+                      if (menuEl) {
+                        menuEl.scrollIntoView({ behavior: 'smooth' });
+                      } else {
+                        onExploreMenu();
+                      }
+                    }}
+                    className="px-4 py-2 bg-[#d8b467] hover:bg-[#caa455] text-stone-950 font-semibold text-xs sm:text-[13px] rounded-lg transition-colors cursor-pointer"
+                  >
+                    Order Online
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onExploreMenu}
+                    className="px-4 py-2 border border-[#d8b467]/75 hover:bg-white/10 text-white font-semibold text-xs sm:text-[13px] rounded-lg transition-colors cursor-pointer"
+                  >
+                    Explore Menu
+                  </button>
                 </div>
               </div>
-            </div>
-
-            {/* Quality Seal Accent */}
-            <div className="mt-3 sm:mt-0 sm:absolute sm:-bottom-4 sm:left-4 glass-panel px-4 py-2 rounded-xl shadow-lg inline-flex items-center gap-2 text-xs font-semibold text-stone-800 dark:text-stone-200">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-              <span>Certified Organic & Non-GMO</span>
             </div>
           </div>
 

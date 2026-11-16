@@ -149,11 +149,31 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         + Athlete Portion (+40% protein)
                       </span>
                     )}
+                    {(item.customization.portion === 'large' || item.customization.portion === 'extra') && (
+                      <span className="text-amber-700 dark:text-amber-400 font-semibold capitalize block">
+                        Portion: {item.customization.portion}
+                      </span>
+                    )}
                     {item.customization.carbSwap !== 'original' && (
-                      <span className="block">Swap: {item.customization.carbSwap.replace('-', ' ')}</span>
+                      <span className="block capitalize">Swap: {item.customization.carbSwap.replace('-', ' ')}</span>
                     )}
                     {item.customization.sauceOption !== 'standard' && (
-                      <span className="block">Sauce: {item.customization.sauceOption.replace('-', ' ')}</span>
+                      <span className="block capitalize">Sauce: {item.customization.sauceOption.replace('-', ' ')}</span>
+                    )}
+                    {item.customization.addons && item.customization.addons.length > 0 && (
+                      <span className="text-emerald-700 dark:text-emerald-400 font-medium block">
+                        Add-ons: {item.customization.addons.map((a) => `${a.name} (+$${a.price.toFixed(2)})`).join(', ')}
+                      </span>
+                    )}
+                    {item.customization.dietaryExclusions && item.customization.dietaryExclusions.length > 0 && (
+                      <span className="block">
+                        Exclude: {item.customization.dietaryExclusions.join(', ')}
+                      </span>
+                    )}
+                    {item.customization.specialInstructions && (
+                      <span className="block italic truncate">
+                        Note: &ldquo;{item.customization.specialInstructions}&rdquo;
+                      </span>
                     )}
                   </div>
 
